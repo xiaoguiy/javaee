@@ -130,15 +130,15 @@
         <version>2.2</version>
         <configuration>
           <path>/</path>
-          <port>8088</port>
+          <port>8089</port>
         </configuration>
       </plugin>
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
-                <source>7</source>
-                <target>7</target>
+                <source>6</source>
+                <target>6</target>
             </configuration>
         </plugin>
     </plugins>

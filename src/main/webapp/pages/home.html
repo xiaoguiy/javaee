@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <!-- import CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../css/home.css">
+</head>
+<body>
+<el-container id="app">
+    <el-header>
+        <el-row id="nav" type="flex" justify="center">
+<!--            导航栏-->
+            <el-col :span="1"></el-col>
+            <el-col :span="2"><img src="../images/logo.png"/></el-col>
+            <el-col :span="1"></el-col>
+            <el-col :span="1"> <el-link type="primary" href="#">首页</el-link></el-col>
+            <el-col :span="2"><el-link type="primary" href="#">经典文学</el-link></el-col>
+            <el-col :span="2"><el-link type="primary" href="#">通俗小说</el-link></el-col>
+            <el-col :span="2"><el-link type="primary" href="#">计算机</el-link></el-col>
+            <el-col :span="2"><el-link type="primary" href="#">杂志期刊</el-link></el-col>
+            <el-col :span="8"></el-col>
+            <el-col :span="3">
+                <div v-if="!isLogined">
+                    <el-button type="primary" round @click="showLogWin()">登录</el-button>
+                    <el-button type="primary" round @click="showRegWin()">注册</el-button>
+                </div>
+                <div v-else>
+                    <el-dropdown>
+                        <el-avatar
+                                :src="avatar"
+                        ></el-avatar>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item icon="el-icon-setting"
+                            ><label @click="setting()">个人资料</label></el-dropdown-item
+                            >
+                            <el-dropdown-item icon="el-icon-circle-close"
+                            ><label @click="exit()">注销</label></el-dropdown-item
+                            >
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                </div>
+            </el-col>
+        </el-row>
+        <el-row>
+            <!--            搜索栏-->
+        </el-row>
+
+        <el-dialog title="登录对话框" :visible.sync="isLogWin">
+            <el-form :model="logForm">
+                <el-form-item label="用户名">
+                    <el-input v-model="logForm.name" placeholder="请输入用户名"></el-input>
+                </el-form-item>
+                <el-form-item label="密码">
+                    <el-input v-model="logForm.pass" placeholder="请输入密码" show-password></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="loginAjax()">确 定</el-button>
+            </div>
+        </el-dialog>
+        <el-dialog title="注册对话框"  :visible.sync="isRegWin">
+
+        </el-dialog>
+        <el-dialog title="上传对话框"  :visible.sync="isUpLoadWin">
+
+        </el-dialog>
+    </el-header>
+
+    <el-main>
+        <el-row>
+<!--            中间的内容主体-->
+        </el-row>
+    </el-main>
+
+    <el-footer>
+
+    </el-footer>
+</el-container>
+</body>
+<!-- import Vue before Element -->
+<script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+<!-- import JavaScript -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    var vm=new Vue({
+        el:"#app",
+        data:{
+            isLogined:false,//是否登录
+            isLogWin:false,//是否显示对话框
+            isRegWin:false,//是否显示对话框
+            isUpLoadWin:false,//是否显示对话框
+            logForm:{//登录对话框的文本框值
+                name:'',
+                pass:''
+            },
+            avatar:'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'
+        },
+        methods:{
+            showLogWin(){
+                //弹出登录对话框
+                this.isLogWin=true;
+            },
+            showRegWin(){
+                //弹出注册对话框
+                this.isRegWin=true;
+            },
+            exit(){
+                console.log("aaa")
+                //退出登录：isLogined改成false;发起请求，后端控制器要退出会话
+                axios.get("/users/logout")
+                    .then((resp)=>{
+                        //当请求后端控制器服务，做出响应后，执行这个函数
+                        if (resp.data.code==1007) {
+                            //退出登录成功：isLogined改成false,
+                            this.isLogined = false;
+                        }
+                    })
+                    .catch();
+            },
+            loginAjax(){
+                //点击登录对话框的确定按钮，向后端发起登录请求：
+                this.isLogWin=false;
+                axios.post("/users/login",{
+                    userCode:this.logForm.name,
+                    userPassword:this.logForm.pass
+                })
+                    .then((resp)=>{
+                        //当请求后端控制器服务，做出响应后，执行这个函数
+                        if (resp.data.code==1001){
+                            //登录成功：isLogined改成true,
+                            this.isLogined=true;
+                            this.avatar="/images/avatars/04060"+resp.data.data.avatarNum+".jpg";
+                            console.log(resp.data.data);
+                        }else {
+                            //登录失败：弹出提示框（三秒自动消失），请用户继续登录
+                            console.log(resp.data.data);
+                        }
+
+                    })
+                    .catch((error)=>{
+                        //当请求后端控制器服务，没有做出响应后，执行这个函数
+                    });
+            }
+        }
+    });
+</script>
+</html>

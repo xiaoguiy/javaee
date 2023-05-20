@@ -31,7 +31,7 @@ public class BookController {
     @PostMapping()
     public MyResponse getBooksByBook(@RequestBody Book book){
         log.info("getBooksByBook:"+book.getBook_title());
-        List<Book> books=new ArrayList<>();
+        List<Book> books=new ArrayList<Book>();
         Book book1 = new Book();
         book1.setId(1);
         Book book2 = new Book();
@@ -44,7 +44,7 @@ public class BookController {
     @GetMapping()
     public MyResponse getAllBook(){
         log.info("getAllBook:");
-        List<Book> books=new ArrayList<>();
+        List<Book> books=new ArrayList<Book>();
         Book book1 = new Book();
         book1.setId(1);
         books.add(book1);

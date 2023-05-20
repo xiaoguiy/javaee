@@ -9,6 +9,7 @@ public enum ResultCode implements StatusCode{
     SUCCESS_ADD(1004,"新增成功！"),
     SUCCESS_UPDATE(1005,"编辑成功！"),
     SUCCESS_DELETE(1006,"删除成功！"),
+    SUCCESS_LOGOUT(1007,"退出登录成功！"),
 
     ERROR(2000,"操作失败！"),
     ERROR_DB(2001,"数据库发生异常"),
@@ -20,6 +21,7 @@ public enum ResultCode implements StatusCode{
     ERROR_EXPIRE(2007,"激活码过期"),
     ERROR_QUERY_GOODS(2008,"查询商品失败"),
     ERROR_ADD_GOODS(2009,"添加商品失败"),
+    ERROR_LOGIN(2010,"登录失败！可能用户名或密码输入错误！"),
     ERROR_PARAM(3000,"请求的参数项缺失或参数格式不对或类型不对");
 
     ResultCode(int code, String msg) {
