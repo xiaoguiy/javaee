@@ -1,6 +1,7 @@
 com\ldzy\config\ServletConfig.class
 com\ldzy\controller\BookController.class
 com\ldzy\mapper\UserMapper.class
+com\ldzy\interceptor\LoginInterceptor.class
 com\ldzy\service\BookService.class
 com\ldzy\service\UserService.class
 com\ldzy\controller\StatusCode.class

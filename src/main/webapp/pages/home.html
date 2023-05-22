@@ -9,17 +9,27 @@
 </head>
 <body>
 <el-container id="app">
-    <el-header>
+    <el-header style="height: 168px">
         <el-row id="nav" type="flex" justify="center">
-<!--            导航栏-->
+            <!--            导航栏-->
             <el-col :span="1"></el-col>
             <el-col :span="2"><img src="../images/logo.png"/></el-col>
             <el-col :span="1"></el-col>
-            <el-col :span="1"> <el-link type="primary" href="#">首页</el-link></el-col>
-            <el-col :span="2"><el-link type="primary" href="#">经典文学</el-link></el-col>
-            <el-col :span="2"><el-link type="primary" href="#">通俗小说</el-link></el-col>
-            <el-col :span="2"><el-link type="primary" href="#">计算机</el-link></el-col>
-            <el-col :span="2"><el-link type="primary" href="#">杂志期刊</el-link></el-col>
+            <el-col :span="1">
+                <el-link type="primary" href="#">首页</el-link>
+            </el-col>
+            <el-col :span="2">
+                <el-link type="primary" href="#">经典文学</el-link>
+            </el-col>
+            <el-col :span="2">
+                <el-link type="primary" href="#">通俗小说</el-link>
+            </el-col>
+            <el-col :span="2">
+                <el-link type="primary" href="#">计算机</el-link>
+            </el-col>
+            <el-col :span="2">
+                <el-link type="primary" href="#">杂志期刊</el-link>
+            </el-col>
             <el-col :span="8"></el-col>
             <el-col :span="3">
                 <div v-if="!isLogined">
@@ -43,8 +53,23 @@
                 </div>
             </el-col>
         </el-row>
-        <el-row>
-            <!--            搜索栏-->
+        <el-row style="height: 15px"></el-row>
+        <!--            搜索上传栏-->
+        <el-row id="search" type="flex" justify="center">
+            <el-col :span="8"></el-col>
+            <el-col :span="8">
+                <el-select v-model="searchType" placeholder="请选择">
+                    <el-option
+                            v-for="item in searchTypes"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+                <el-button type="success" @click="searchAjax">搜索</el-button>
+                <el-button type="primary" @click="showLoadupWin">我要上传<i class="el-icon-upload el-icon--right"></i></el-button>
+            </el-col>
+            <el-col :span="8"></el-col>
         </el-row>
 
         <el-dialog title="登录对话框" :visible.sync="isLogWin">
@@ -60,17 +85,50 @@
                 <el-button type="primary" @click="loginAjax()">确 定</el-button>
             </div>
         </el-dialog>
-        <el-dialog title="注册对话框"  :visible.sync="isRegWin">
+        <el-dialog title="注册对话框" :visible.sync="isRegWin">
 
         </el-dialog>
-        <el-dialog title="上传对话框"  :visible.sync="isUpLoadWin">
+        <el-dialog title="上传对话框" :visible.sync="isUpLoadWin">
 
         </el-dialog>
     </el-header>
 
     <el-main>
-        <el-row>
-<!--            中间的内容主体-->
+        <el-row  type="flex" justify="center">
+            <!--            中间的内容主体-->
+            <el-col :span="8">
+                <el-card shadow="always">
+                    <div slot="header">
+                        <span>热门下载</span>
+                    </div>
+                    <div @click="lookBook()" style="border-bottom: 1px #B3C0D1 dashed;height: 40px;line-height: 40px"
+                         v-for="book in hotBooks" :key="book.id" class="text item">
+                        {{book.book_title}}+{{book.download_times}}
+                    </div>
+                </el-card>
+            </el-col>
+            <el-col :span="1"></el-col>
+            <el-col :span="8">
+                <el-card shadow="always">
+                    <div slot="header">
+                        <span>最新下载</span>
+                    </div>
+                    <div v-for="i in 4" :key="i" class="text item">
+                        {{'列表内容'+i}}
+                    </div>
+                </el-card>
+            </el-col>
+            <el-col :span="1"></el-col>
+            <el-col :span="6">
+                <el-card shadow="always">
+                    <div slot="header">
+                        <span>站内数据</span>
+                    </div>
+                    <div v-for="i in 4" :key="i" class="text item">
+                        {{'列表内容'+i}}
+                    </div>
+                </el-card>
+            </el-col>
         </el-row>
     </el-main>
 
@@ -85,63 +143,125 @@
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
-    var vm=new Vue({
-        el:"#app",
-        data:{
-            isLogined:false,//是否登录
-            isLogWin:false,//是否显示对话框
-            isRegWin:false,//是否显示对话框
-            isUpLoadWin:false,//是否显示对话框
-            logForm:{//登录对话框的文本框值
-                name:'',
-                pass:''
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            //导航栏的变量
+            isLogined: false,//是否登录
+            isLogWin: false,//是否显示对话框
+            isRegWin: false,//是否显示对话框
+            logForm: {//登录对话框的文本框值
+                name: '',
+                pass: ''
             },
-            avatar:'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'
+            avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
+            //搜索上传栏的变量
+            searchType:'书名',
+            searchTypes:[
+                {
+                    key:1,
+                    label:'书名',
+                    value:'书名'
+                },{
+                    key:2,
+                    label:'作者',
+                    value:'作者'
+                }
+            ],
+            isUpLoadWin: false,//是否显示上传对话框
+            //主体内容的变量
+            hotBooks:[
+                {id:11211001211103991,name:'狼王梦',download_times:5,book_file:''},
+                {id:11211001211103991,name:'狼王梦',download_times:5,book_file:''},
+                {id:11211001211103991,name:'狼王梦',download_times:5,book_file:''},
+                {id:11211001211103991,name:'狼王梦',download_times:5,book_file:''},
+                {id:11211001211103991,name:'狼王梦',download_times:5,book_file:''},
+                {id:11211001211103991,name:'狼王梦',download_times:5,book_file:''},
+                {id:11211001211103991,name:'狼王梦',download_times:5,book_file:''},
+                {id:11211001211103991,name:'狼王梦',download_times:5,book_file:''},
+                {id:11211001211103991,name:'狼王梦',download_times:5,book_file:''},
+                {id:11211001211103991,name:'狼王梦',download_times:5,book_file:''},
+            ]
         },
-        methods:{
-            showLogWin(){
+        created(){
+            //该方法执行时机：当页面加载完成时
+            this.getHotBooks();
+        },
+        methods: {
+            //导航栏方法：
+            showLogWin() {
                 //弹出登录对话框
-                this.isLogWin=true;
+                this.isLogWin = true;
             },
-            showRegWin(){
+            showRegWin() {
                 //弹出注册对话框
-                this.isRegWin=true;
+                this.isRegWin = true;
             },
-            exit(){
+            exit() {
                 console.log("aaa")
                 //退出登录：isLogined改成false;发起请求，后端控制器要退出会话
                 axios.get("/users/logout")
-                    .then((resp)=>{
+                    .then((resp) => {
                         //当请求后端控制器服务，做出响应后，执行这个函数
-                        if (resp.data.code==1007) {
+                        if (resp.data.code == 1007) {
                             //退出登录成功：isLogined改成false,
                             this.isLogined = false;
                         }
                     })
                     .catch();
             },
-            loginAjax(){
+            loginAjax() {
                 //点击登录对话框的确定按钮，向后端发起登录请求：
-                this.isLogWin=false;
-                axios.post("/users/login",{
-                    userCode:this.logForm.name,
-                    userPassword:this.logForm.pass
+                this.isLogWin = false;
+                axios.post("/users/login", {
+                    userCode: this.logForm.name,
+                    userPassword: this.logForm.pass
                 })
-                    .then((resp)=>{
+                    .then((resp) => {
                         //当请求后端控制器服务，做出响应后，执行这个函数
-                        if (resp.data.code==1001){
+                        if (resp.data.code == 1001) {
                             //登录成功：isLogined改成true,
-                            this.isLogined=true;
-                            this.avatar="/images/avatars/04060"+resp.data.data.avatarNum+".jpg";
+                            this.isLogined = true;
+                            this.avatar = "/images/avatars/04060" + resp.data.data.avatarNum + ".jpg";
                             console.log(resp.data.data);
-                        }else {
+                        } else {
                             //登录失败：弹出提示框（三秒自动消失），请用户继续登录
+                            this.$message('登录失败！可能密码或用户名错误！');
                             console.log(resp.data.data);
                         }
 
                     })
-                    .catch((error)=>{
+                    .catch((error) => {
                         //当请求后端控制器服务，没有做出响应后，执行这个函数
+                    });
+            },
+            //搜索和上传栏方法：
+            searchAjax(){
+                //该方法发起请求，请求后端对数据库进行搜索
+            },
+            showLoadupWin(){
+                //弹出我要上传对话框
+                this.isUpLoadWin=true;
+            },
+            //主体内容的方法
+            lookBook(){
+                //点击卡片中书名，就打开新的页面，这个页面中展示书的内容
+            },
+            getHotBooks(){
+                this.hotBooks=[];
+                //去后端获取数据
+                axios.get("/books/getHot")
+                    .then((resp)=>{
+                        if(resp.data.code==1003){
+                            //成功获取书籍
+                            this.hotBooks=resp.data.data;
+                            console.log(resp);
+                        }else {
+                            //获取书籍失败
+                        }
+                    })
+                    .catch((error)=>{
+                        //获取书籍失败
                     });
             }
         }

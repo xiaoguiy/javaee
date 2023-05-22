@@ -19,6 +19,21 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
+    //查询站内数据
+    @GetMapping("/getSiteData")
+    public MyResponse getSiteData(){
+        return null;
+    }
+
+    //查询最热门下载的十本书
+    @GetMapping("/getHot")
+    public MyResponse getHotBooks(){
+        List<Book> books=this.bookService.getHotBooks();
+        log.info(books.size()+"");
+        if (books!=null) return new MyResponse(ResultCode.SUCCESS_QUERY,books);
+        return new MyResponse(ResultCode.ERROR_QUERY_GOODS);
+    }
+
     //查一本书
     @GetMapping("{id}")
     public MyResponse getBookById(@PathVariable("id") long id){

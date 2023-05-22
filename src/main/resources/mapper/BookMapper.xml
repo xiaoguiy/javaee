@@ -6,4 +6,8 @@
     <select id="getBookById"  resultType="com.ldzy.pojo.Book">
         select * from book where id=#{id}
     </select>
+
+    <select id="getHotBooks"  resultType="com.ldzy.pojo.Book">
+        select * from book order by download_times desc limit 6
+    </select>
 </mapper>

@@ -26,3 +26,13 @@
 0:0:0:0:0:0:0:1 - - [20/May/2023:16:50:39 +0800] "POST /users/login HTTP/1.1" 200 201 http-bio-8089-exec-3 251
 0:0:0:0:0:0:0:1 - - [20/May/2023:16:50:42 +0800] "GET /users/logout HTTP/1.1" 200 66 http-bio-8089-exec-4 2
 0:0:0:0:0:0:0:1 - - [20/May/2023:16:50:58 +0800] "GET /users/logout HTTP/1.1" 200 66 http-bio-8089-exec-5 1
+0:0:0:0:0:0:0:1 - - [20/May/2023:16:52:41 +0800] "GET /pages/home.html HTTP/1.1" 200 6193 http-bio-8089-exec-1 42
+0:0:0:0:0:0:0:1 - - [20/May/2023:16:52:50 +0800] "POST /users/login HTTP/1.1" 200 201 http-bio-8089-exec-3 241
+0:0:0:0:0:0:0:1 - - [20/May/2023:16:52:52 +0800] "GET /users/logout HTTP/1.1" 200 66 http-bio-8089-exec-4 3
+0:0:0:0:0:0:0:1 - - [20/May/2023:17:23:00 +0800] "GET /pages/home.html HTTP/1.1" 304 - http-bio-8089-exec-1 38
+0:0:0:0:0:0:0:1 - - [20/May/2023:17:23:11 +0800] "GET /pages/userInfo.html HTTP/1.1" 200 - http-bio-8089-exec-3 3
+0:0:0:0:0:0:0:1 - - [20/May/2023:17:40:23 +0800] "GET /pages/home.html HTTP/1.1" 200 6289 http-bio-8089-exec-1 44
+0:0:0:0:0:0:0:1 - - [20/May/2023:17:40:34 +0800] "POST /users/login HTTP/1.1" 200 99 http-bio-8089-exec-3 237
+0:0:0:0:0:0:0:1 - - [20/May/2023:18:09:22 +0800] "GET /pages/home.html HTTP/1.1" 200 7328 http-bio-8089-exec-1 46
+0:0:0:0:0:0:0:1 - - [20/May/2023:18:10:29 +0800] "GET /pages/home.html HTTP/1.1" 200 7337 http-bio-8089-exec-1 41
+0:0:0:0:0:0:0:1 - - [20/May/2023:18:12:07 +0800] "GET /pages/home.html HTTP/1.1" 200 7335 http-bio-8089-exec-1 43
